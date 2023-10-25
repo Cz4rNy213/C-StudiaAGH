@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>
-
 /* Nalezy uzupelnic o header biblioteki zawierajacy definicja stalej INT_MAX */
 
 #define OCENIAJ 0  // Przed wyslaniem programu do oceny nalezy wartosc tej stalej zmienic na 1 
@@ -13,6 +12,7 @@ int main(void) {
     scanf("%d",&seed);
     if(OCENIAJ == 0) printf("Wpisz liczbe generowanych liczb pseudolosowych: ");
     scanf("%d",&n);
+    
     if (n >= INT_MIN && n <= INT_MAX){
         double average;
         int nums[n];
@@ -24,15 +24,18 @@ int main(void) {
             double counter = 0, sum = 0;
             for (int num = 0; num < n; num++){
                 if (floor(nums[num] / 100) == first_digit){
-                    counter ++;
+                    counter++;
                     sum += nums[num];
                 }
             }
-            average = sum / counter;
-            printf("%.2lf ", average);
-        }
+            if(counter == 0){
+                printf("%.2lf ", 0.0);   
+            }else{
+                average = sum / counter;
+                printf("%.2lf ", average);
+            }
+                
+            }
     }
-    
-
     return 0;
 }
