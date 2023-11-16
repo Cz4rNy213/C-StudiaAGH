@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define OCENIAJ 1 // Przed wyslaniem programu do oceny nalezy wartosc tej stalej zmienic na 1 
+#define OCENIAJ 0 // Przed wyslaniem programu do oceny nalezy wartosc tej stalej zmienic na 1 
 #define SIZE   10  // rozmiar tablicy
 
 void right(int tab[], int move){
