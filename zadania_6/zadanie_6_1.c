@@ -22,6 +22,7 @@ void findMax(int tk[KOD_MAX - KOD_MIN + 1]){
     for (int j = 0; j < KOD_MAX - KOD_MIN + 1; j++){
         if (tk[j] == max){
             putchar(j+KOD_MIN);
+            printf(" ");
         }
     }
 }
