@@ -1,0 +1,250 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Wersja C
+
+//Funkcja inicjująca kalendarz, wpisuje liczby 99 zmienione na string by potem można było je zamieniać na faktyczne dni
+void createCalendar(char matrix[][7][3], int rows, int cols) {
+    int num = 99; 
+    char num_to_string[3];
+    sprintf(num_to_string, "%d", num);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            strcpy(matrix[i][j], num_to_string);
+        }
+    }
+}
+
+//Funkcja obliczająca w jaki dzień tygodnia wypada pierwszy dzień miesiąca
+int calculateFirstDay(int day_of_month, int day_of_week) {
+    int first_day = (day_of_week - (day_of_month - 1)) % 7;
+
+    // Jeśli wynik jest ujemny, dodaje 7 by uzyskać poprawny dzien
+    if (first_day <= 0) {
+        first_day += 7;
+    }
+    return first_day;
+}
+
+//Funckcja zmieniająca format dni tygodnia z tych które dostarcza biblioteka time.h na przyjęte przezemnie czyli : 1-poniedziałek, 2-wtorek,..., 7-niedziela
+int changeDayOfWeek(int day_of_week_unchanged){
+    int day_of_week;
+    switch (day_of_week_unchanged)
+    {
+    case 0:
+        day_of_week = 7;
+        break;
+    case 1:
+        day_of_week = 1;
+        break;
+    case 2:
+        day_of_week = 2;
+        break;
+    case 3:
+        day_of_week = 3;
+        break;
+    case 4:
+        day_of_week = 4;
+        break;
+    case 5:
+        day_of_week = 5;
+        break;
+    case 6:
+        day_of_week = 6;
+        break;
+    default:
+        break;
+    }
+    return day_of_week;
+}
+
+//Funkcja, która sprawdza czy rok jest przestępny
+bool leapYear(int year){
+    if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+//Funkcja obliczająca ile dni ma aktualny miesiąc
+int daysInMonth(int month, int year){
+    int days_in_month;
+    if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month ==10 || month == 12){
+        days_in_month = 31;
+    }
+    else if (month == 2 && leapYear(year))
+    {
+        days_in_month = 29;
+    }
+    else if (month == 2 && !leapYear(year))
+    {
+        days_in_month = 28;
+    }
+    else{
+        days_in_month = 30;
+    }
+    return days_in_month;
+}
+/*
+Komentarz blokowy do usunięcia
+!!!
+*/
+
+int main(void){
+    int day_of_month, day_of_week_unchanged, month, first_day, day_of_week, year, days_in_month, a = 1;
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    day_of_month  = tm.tm_mday;
+    day_of_week_unchanged = tm.tm_wday;
+    month = tm.tm_mon + 1;
+    year = tm.tm_year + 1900;
+    days_in_month = daysInMonth(month, year);
+    day_of_week = changeDayOfWeek(day_of_week_unchanged);
+    first_day = calculateFirstDay(day_of_month, day_of_week);
+    
+    //Dopasowuje liczbe wierszy
+    if (days_in_month + first_day - 1 <= 28){
+        int rows = 4;
+        int cols = 7;
+        char matrix[rows][cols][3];
+        createCalendar(matrix, rows, cols);
+        //Zamienia "99" na odpowiedni dni, a jeśli dni sie skończą to na puste kolumny
+        while (a <= 28 - first_day + 1){
+            for (int i = 0; i < rows ; i++){
+                for (int j = 0; j < cols; j++){
+                    if (strcmp(matrix[i][j], "99") == 0){
+                        if(a < 10){
+                            char a_string[3];
+                            sprintf(a_string, " %d", a);
+                            strcpy(matrix[i][j], a_string);
+                            a++;
+                        }
+                        else if (a <= days_in_month ){
+                            char a_string[3];
+                            sprintf(a_string, "%d", a);
+                            strcpy(matrix[i][j], a_string);
+                            a++;
+                        }
+                        else if (a <= 28 - first_day + 1){
+                            strcpy(matrix[i][j], "  ");
+                            a++;
+                        }
+                    }
+                }
+            }
+        }
+        //Wyświetla kalendarz
+        printf("Miesiac: %d\n", month);
+        printf("|Po| Wt| Sr| Cz| Pt| So| Ni|\n");
+        for (int i = 0; i < rows; i++) {
+            printf("|");
+            for (int j = 0; j < cols; j++) {
+                printf("%s| ", matrix[i][j]);
+            }
+            printf("\n");
+            /*
+            komentarz blokowy do usunięcia!!!
+            !!!
+            */
+        }
+    }
+    
+    //Dopasowuje liczbe wierszy
+    else if (28 < days_in_month + first_day -1 && days_in_month + first_day -1 <= 35){
+        int rows = 5;
+        int cols = 7;
+        char matrix[rows][cols][3];
+        createCalendar(matrix, rows, cols);
+        //Zastępuje dni tygodnia w wierszu o indeksie 0 pustym miejscem tak aby poprawnie wyświetlało dni
+        for (int x = 0; x < first_day - 1; x++){
+            strcpy(matrix[0][x], "  ");
+        }
+        //Zamienia "99" na odpowiedni dni, a jeśli dni sie skończą to na puste kolumny
+        while (a <= 35 - first_day + 1){
+            for (int i = 0; i < rows ; i++){
+                for (int j = 0; j < cols; j++){
+                    if (strcmp(matrix[i][j], "99") == 0){
+                        if(a < 10){
+                            char a_string[3];
+                            sprintf(a_string, " %d", a);
+                            strcpy(matrix[i][j], a_string);
+                            a++;
+                        }
+                        else if (a <= days_in_month ){
+                            char a_string[3];
+                            sprintf(a_string, "%d", a);
+                            strcpy(matrix[i][j], a_string);
+                            a++;
+                        }
+                        else if (a <= 35 - first_day + 1){
+                            strcpy(matrix[i][j], "  ");
+                            a++;
+                        }
+                    }
+                }
+            }
+        }
+        //Wyświetla kalendarz
+        printf("Miesiac: %d\n", month);
+        printf("|Po| Wt| Sr| Cz| Pt| So| Ni|\n");
+        for (int i = 0; i < rows; i++) {
+            printf("|");
+            for (int j = 0; j < cols; j++) {
+                printf("%s| ", matrix[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    
+    //Dopasowuje liczbe wierszy
+    else if (35 < days_in_month + first_day -1 && days_in_month + first_day -1 <= 42){
+        int rows = 6;
+        int cols = 7;
+        char matrix[rows][cols][3];
+        createCalendar(matrix, rows, cols);
+        //Zastępuje dni tygodnia w wierszu o indeksie 0 pustym miejscem tak aby poprawnie wyświetlało dni
+        for (int x = 0; x < first_day - 1; x++){
+            strcpy(matrix[0][x], "  ");
+        }
+        //Zamienia "99" na odpowiedni dni, a jeśli dni sie skończą to na puste kolumny
+        while (a <= 42 - first_day + 1){
+            for (int i = 0; i < rows ; i++){
+                for (int j = 0; j < cols; j++){
+                    if (strcmp(matrix[i][j], "99") == 0){
+                        if(a < 10){                        
+                            char a_string[3];
+                            sprintf(a_string, " %d", a);
+                            strcpy(matrix[i][j], a_string);
+                            a++;
+                        }
+                        else if (a <= days_in_month ){
+                            char a_string[3];
+                            sprintf(a_string, "%d", a);
+                            strcpy(matrix[i][j], a_string);
+                            a++;
+                        }
+                        else if (a <= 42 - first_day + 1){
+                            strcpy(matrix[i][j], "  ");
+                            a++;
+                        }
+                    }
+                }
+            }
+        }
+        //Wyświetla kalendarz
+        printf("Miesiac: %d\n", month);
+        printf("|Po| Wt| Sr| Cz| Pt| So| Ni|\n");
+        for (int i = 0; i < rows; i++) {
+            printf("|");
+            for (int j = 0; j < cols; j++) {
+                printf("%s| ", matrix[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    return 0;
+}
