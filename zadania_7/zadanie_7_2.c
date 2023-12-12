@@ -11,15 +11,10 @@ char* read_string(){
     return dynam_str;
 }
 
-<<<<<<< Updated upstream
 int compare(const void* prev, const void* next){
     const char* ch1 = *(const char**)(prev);
     const char* ch2 = *(const char**)(next);
     return strcmp(ch1, ch2);
-=======
-int  swap(const void* prev, const void* next){
-    return strcmp(*(const char**)prev, *(const char**)next);
->>>>>>> Stashed changes
 }
 
 // void sort(char* tab[], size_t tab_size){
@@ -53,17 +48,9 @@ int main(void) {
     for (int i = 0; i < n; i++){
         strings_array[i] = read_string();
     }
-<<<<<<< Updated upstream
     qsort(strings_array, n, sizeof(*strings_array), compare);
     // sort(strings_array, n);
     print_string(strings_array, n);
-=======
-    // sort(strings_array, n);
-    qsort(strings_array, n, sizeof(strings_array[0]), swap);
-    print_string(strings_array, n);
-
-
->>>>>>> Stashed changes
     for(int j = 0; j < n; j++){
         free(strings_array[j]);
     }
