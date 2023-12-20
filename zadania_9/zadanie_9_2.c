@@ -127,10 +127,6 @@ void erase(Vector* vec, size_t index){
     }
 }
 
-void erase_value(Vector* vec, ){
-    
-}
-
 //erase() funkcja powinna usunac dany obszar pamieci uzywajac del(), a nastepne elementy przesunac o jedno miejsce w lewo, chyba ze byl to ostatni element
 
 int main(void) {
